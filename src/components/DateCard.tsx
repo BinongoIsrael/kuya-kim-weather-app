@@ -44,9 +44,9 @@ const DateCard: React.FC<{ data: WeatherData }> = ({ data }) => {
   }, [data?.dt_txt]);
 
   return (
-    <div className="bg-gray-800 p-4 rounded-lg text-white text-center w-[400px] h-[280px] border-2 border-black shadow-2xl">
-      <h2 className="text-xl font-semibold mt-10">Baybay City</h2>
-      <p className="font-bold text-[60px] pt-5">{currentTime}</p>
+    <div className="bg-black/50 p-4 rounded-lg w-[90vw] text-white text-center lg:w-[20vw] lg:h-[25vh] mt-5 mb-10">
+      <h2 className="text-xl font-semibold">Baybay City</h2>
+      <p className="font-bold text-[60px]">{currentTime}</p>
       <p className="text-sm">{currentDate}</p>
     </div>
   );

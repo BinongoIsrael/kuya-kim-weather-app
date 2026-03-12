@@ -1,65 +1,97 @@
 import {
-  WiCloudy,
-  WiDaySunny,
-  WiRain,
-  WiThunderstorm,
-  WiSnow,
-} from "react-icons/wi";
+  Sun,
+  Cloud,
+  CloudRain,
+  CloudLightning,
+  Snowflake,
+  Clock,
+} from "lucide-react";
 import { WeatherData } from "../utils/definition";
 
 const HourlyCardComponent: React.FC<{ data: WeatherData[] }> = ({ data }) => {
-  const currentTime = new Date(); // Get the current time
+  const currentTime = new Date();
 
   // Filter only future hourly data
-  const upcomingHours = data.filter((hourData) => {
-    return new Date(hourData.dt_txt) > currentTime;
-  });
+  const upcomingHours = data.filter(
+    (hourData) => new Date(hourData.dt_txt) > currentTime
+  );
+
+  // 🔹 Function to Get the Correct Weather Icon
+  const getWeatherIcon = (condition: string) => {
+    switch (condition) {
+      case "Clear":
+        return <Sun className="text-yellow-400 w-8 h-8" />;
+      case "Clouds":
+        return <Cloud className="text-gray-400 w-8 h-8" />;
+      case "Rain":
+        return <CloudRain className="text-blue-400 w-8 h-8" />;
+      case "Thunderstorm":
+        return <CloudLightning className="text-purple-500 w-8 h-8" />;
+      case "Snow":
+        return <Snowflake className="text-white w-8 h-8" />;
+      default:
+        return <Cloud className="text-gray-400 w-8 h-8" />;
+    }
+  };
 
   return (
-    <div className="flex flex-col gap-4 w-[830px] h-[340px] items-center bg-[#1e2939] rounded-2xl shadow-3xl">
-      <h2 className="text-3xl py-3">Hourly Forecast</h2>
-      <div className="flex gap-5">
-        {upcomingHours.map((hourData, index) => {
-          // Format time in 24-hour format (HH:mm)
+    <div className="flex flex-col pb-6 w-full mt-10 lg:w-[60vw] lg:h-[35vh] bg-black/50 rounded-2xl p-5 ml-1 mr-0">
+      <div className="flex items-center gap-2 border-b-2 mb-2 pb-2 border-white/30">
+        <Clock color="white" />
+        <h2 className="text-2xl text-white">Hourly Forecast</h2>
+      </div>
+
+      {/* 🔹 Mobile View: Horizontal Scroll */}
+      <div className="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory lg:hidden">
+        {upcomingHours.slice(0, 6).map((hourData, index) => {
           const hour = new Intl.DateTimeFormat("en-GB", {
             hour: "2-digit",
             minute: "2-digit",
-            hour12: false, // Ensures 24-hour format
+            hour12: false,
           }).format(new Date(hourData.dt_txt));
 
           return (
             <div
               key={index}
-              className="bg-gray-900 bg-opacity-80 text-white rounded-2xl pb-6 p-2 w-28 h-52 shadow-lg flex flex-col items-center"
+              className="bg-white/20 text-white rounded-2xl w-28 h-32 shadow-lg flex flex-col items-center justify-center p-2 snap-center shrink-0"
             >
-              {/* Time (24-hour format) */}
-              <h3 className="text-lg font-semibold opacity-80">{hour}</h3>
-
-              {/* Weather Icon (Conditionally Rendered) */}
-              <div>
-                {hourData.weather[0].main === "Clear" && (
-                  <WiDaySunny className="text-5xl text-yellow-400 mt-2" />
-                )}
-                {hourData.weather[0].main === "Clouds" && (
-                  <WiCloudy className="text-5xl text-gray-400 mt-2" />
-                )}
-                {hourData.weather[0].main === "Rain" && (
-                  <WiRain className="text-5xl text-blue-400 mt-2" />
-                )}
-                {hourData.weather[0].main === "Thunderstorm" && (
-                  <WiThunderstorm className="text-5xl text-purple-500 mt-2" />
-                )}
-                {hourData.weather[0].main === "Snow" && (
-                  <WiSnow className="text-5xl text-white mt-2" />
-                )}
+              <h3 className="text-sm font-semibold opacity-80">{hour}</h3>
+              <div className="mt-1">
+                {getWeatherIcon(hourData.weather[0].main)}
               </div>
-              {/* Weather Icon & Temperature */}
-              <p className="text-3xl font-bold mt-2">
+              <p className="text-lg font-bold mt-1">
                 {Math.round(hourData.main.temp)}°C
               </p>
+              <p className="text-xs capitalize opacity-80 text-center">
+                {hourData.weather[0].description}
+              </p>
+            </div>
+          );
+        })}
+      </div>
 
-              {/* Weather Description */}
-              <p className="text-sm capitalize opacity-80">
+      {/* 🔹 Large Screen View: Grid Layout */}
+      <div className="hidden lg:grid gap-5 grid-cols-6 justify-around items-center">
+        {upcomingHours.slice(0, 6).map((hourData, index) => {
+          const hour = new Intl.DateTimeFormat("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }).format(new Date(hourData.dt_txt));
+
+          return (
+            <div
+              key={index}
+              className="bg-white/20 text-white rounded-2xl w-28 h-32 shadow-lg flex flex-col items-center justify-center p-2"
+            >
+              <h3 className="text-sm font-semibold opacity-80">{hour}</h3>
+              <div className="mt-1">
+                {getWeatherIcon(hourData.weather[0].main)}
+              </div>
+              <p className="text-lg font-bold mt-1">
+                {Math.round(hourData.main.temp)}°C
+              </p>
+              <p className="text-xs capitalize opacity-80 text-center">
                 {hourData.weather[0].description}
               </p>
             </div>
