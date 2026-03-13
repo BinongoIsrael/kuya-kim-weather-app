@@ -1,9 +1,30 @@
 import { WeatherData } from "../utils/definition";
 
-export const fetchWeatherData = async (): Promise<WeatherData[] | null> => {
+export const fetchWeatherData = async (
+  location: string
+): Promise<WeatherData[] | null> => {
   try {
+    // First get coordinates for the location
+    const geoResponse = await fetch(
+      `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
+        location
+      )}&limit=1&appid=8622b47fdb20666afef001dddd18251f`
+    );
+
+    if (!geoResponse.ok) {
+      throw new Error(`HTTP error! Status: ${geoResponse.status}`);
+    }
+
+    const geoData = await geoResponse.json();
+    if (!geoData || geoData.length === 0) {
+      throw new Error("Location not found");
+    }
+
+    const { lat, lon } = geoData[0];
+
+    // Then get weather data with coordinates
     const response = await fetch(
-      "https://api.openweathermap.org/data/2.5/forecast?lat=10.8624&lon=124.9950&appid=8622b47fdb20666afef001dddd18251f&units=metric"
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=8622b47fdb20666afef001dddd18251f&units=metric`
     );
 
     if (!response.ok) {
@@ -16,23 +37,16 @@ export const fetchWeatherData = async (): Promise<WeatherData[] | null> => {
       throw new Error("Invalid API response format");
     }
 
-    console.log("Fetched Weather Data:", result.list); // Debugging
-    return result.list; // Return the list array
+    // Add coordinates to each weather data item
+    const weatherDataWithCoords = result.list.map((item: WeatherData) => ({
+      ...item,
+      coord: { lat, lon },
+    }));
+
+    console.log("Fetched Weather Data:", weatherDataWithCoords);
+    return weatherDataWithCoords;
   } catch (err) {
     console.error("Error fetching weather data:", err);
-    return null;
+    throw err;
   }
-};
-
-export const fetchWeatherMap = async () => {
-  const response = await fetch(
-    "https://tile.openweathermap.org/map/precipitation_new/5/10/10.png?appid=8622b47fdb20666afef001dddd18251f"
-  );
-
-  if (!response.ok) {
-    return;
-  }
-
-  const result = response.json();
-  console.log(result);
 };

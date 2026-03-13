@@ -1,5 +1,9 @@
 export interface WeatherData {
   dt: number;
+  coord?: {
+    lat: number;
+    lon: number;
+  };
   main: {
     temp: number;
     feels_like: number;
@@ -35,4 +39,49 @@ export interface WeatherData {
   };
   dt_txt: string; // Date and time as a string (e.g., "2025-02-21 18:00:00")
   formattedDate?: string;
+}
+
+// Updated interface with darkMode prop
+export interface SearchBarProps {
+  searchInput: string;
+  setSearchInput: React.Dispatch<React.SetStateAction<string>>;
+  onSearch: (location: string) => void;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+  tempUnit: "C" | "F";
+  toggleTempUnit: () => void;
+  onRefresh: () => void;
+}
+
+export interface ComponentWithDarkMode {
+  darkMode?: boolean;
+}
+
+export interface CardComponentProps extends ComponentWithDarkMode {
+  data: WeatherData;
+}
+
+export interface HourlyCardComponentProps extends ComponentWithDarkMode {
+  data: WeatherData[];
+}
+
+export interface DailyCardProps extends ComponentWithDarkMode {
+  data: WeatherData[];
+}
+
+export interface DateCardProps extends ComponentWithDarkMode {
+  data: WeatherData;
+  location: string;
+}
+
+export interface WeatherAlertsProps {
+  data: WeatherData;
+}
+
+export interface City {
+  name: string;
+  province: string;
+  city: boolean;
 }
