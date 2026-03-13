@@ -1,8 +1,6 @@
 import { WiRain } from "react-icons/wi";
 import { WeatherData } from "../utils/definition";
-import { BiWind } from "react-icons/bi";
-import { LuWaves } from "react-icons/lu";
-import { LiaTachometerAltSolid } from "react-icons/lia";
+
 import {
   WiThermometer,
   WiHumidity,

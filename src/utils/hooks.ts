@@ -69,18 +69,28 @@ export const useGeolocation = (
       } else {
         throw new Error("No location data returned from API");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Location error:", error);
-      const errorMessages = {
-        1: "Location access denied. Please allow location permissions.",
-        2: "Location unavailable. Please check your connection.",
-        3: "Location request timed out. Please try again.",
-      };
-      setLocationError(
-        error.code
-          ? errorMessages[error.code as keyof typeof errorMessages]
-          : `Unable to fetch location: ${error.message || "Unknown error"}`
-      );
+      let errorMessage: string;
+
+      if (error instanceof GeolocationPositionError) {
+        const errorMessages: Record<number, string> = {
+          [GeolocationPositionError.PERMISSION_DENIED]:
+            "Location access denied. Please allow location permissions.",
+          [GeolocationPositionError.POSITION_UNAVAILABLE]:
+            "Location unavailable. Please check your connection.",
+          [GeolocationPositionError.TIMEOUT]:
+            "Location request timed out. Please try again.",
+        };
+        errorMessage = errorMessages[error.code] || "Unknown geolocation error";
+      } else {
+        errorMessage =
+          error instanceof Error
+            ? `Unable to fetch location: ${error.message}`
+            : "Unable to fetch location: Unknown error";
+      }
+
+      setLocationError(errorMessage);
     } finally {
       setLoading(false);
     }

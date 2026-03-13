@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { WeatherData, WeatherAlertsProps } from "../utils/definition";
+import { WeatherAlertsProps } from "../utils/definition";
 import { AlertTriangle, Wind, Thermometer, Droplets } from "lucide-react";
 
 const WeatherAlerts: React.FC<WeatherAlertsProps> = ({ data }) => {
