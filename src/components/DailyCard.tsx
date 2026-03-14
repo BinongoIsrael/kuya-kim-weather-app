@@ -153,7 +153,7 @@ const DailyCard: React.FC<DailyCardProps> = ({ data, darkMode = false }) => {
             "en-GB",
             { weekday: "short", day: "numeric" }
           );
-          const { min, max } = getDayMinMaxTemp(day);
+          const { min } = getDayMinMaxTemp(day);
 
           return (
             <div
@@ -178,7 +178,6 @@ const DailyCard: React.FC<DailyCardProps> = ({ data, darkMode = false }) => {
 
               {/* Temperature */}
               <div className="flex items-center gap-2">
-                <span className="text-sm font-bold">{max}°</span>
                 <span
                   className={`text-xs ${
                     darkMode ? "text-gray-400" : "text-gray-500"
