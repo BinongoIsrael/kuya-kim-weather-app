@@ -56,57 +56,57 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="p-4 bg-white/95 backdrop-blur-md shadow-lg relative z-50">
-      <div className="flex items-center gap-4 max-w-4xl mx-auto">
-        <button
-          onClick={toggleDarkMode}
-          className={`p-2 rounded-full ${
-            darkMode
-              ? "bg-yellow-400 text-gray-900"
-              : "bg-gray-800 text-yellow-400"
-          }`}
-          aria-label="Toggle dark/light mode"
-        >
-          {darkMode ? "☀️" : "🌙"}
-        </button>
+    <div className="p-2 sm:p-4 bg-white/95 backdrop-blur-md shadow-lg relative z-50">
+      <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 w-full max-w-3xl mx-auto">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <button
+            onClick={toggleDarkMode}
+            className={`rounded-full w-[30px] h-[30px] flex items-center justify-center ${
+              darkMode
+                ? "bg-yellow-400 text-gray-900"
+                : "bg-gray-800 text-yellow-400"
+            }`}
+            aria-label="Toggle dark/light mode"
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
 
-        <form onSubmit={handleSubmit} className="flex items-center relative">
-          <div className="relative flex-1">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="text-gray-600" size={16} />
+          <form onSubmit={handleSubmit} className="flex-1">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="text-gray-600" size={16} />
+              </div>
+              <input
+                type="text"
+                value={searchInput}
+                onChange={handleInputChange}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                placeholder="Search city..."
+                className="w-full sm:w-[300px] pl-9 pr-12 py-2 rounded-lg text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-sm text-sm"
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={handleUseLocation}
+                className="absolute right-0 top-1/2 -translate-y-1/2 p-1.5 hover:bg-gray-100 rounded-full transition disabled:opacity-50 flex items-center justify-center"
+                disabled={loading}
+                title="Use my current location"
+              >
+                <MapPin size={16} className="text-gray-600" />
+              </button>
             </div>
-            <input
-              type="text"
-              value={searchInput}
-              onChange={handleInputChange}
-              onFocus={() => setShowSuggestions(true)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-              placeholder="Search city..."
-              className="w-[300px] pl-9 pr-12 py-2 rounded-lg text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-sm text-sm"
-              disabled={loading}
-            />
-            <button
-              type="button"
-              onClick={handleUseLocation}
-              className="absolute right-0 top-1/2 -translate-y-1/2 p-1.5 hover:bg-gray-100 rounded-full transition disabled:opacity-50 flex items-center justify-center"
-              disabled={loading}
-              title="Use my current location"
-            >
-              <MapPin size={16} className="text-gray-600" />
-            </button>
-          </div>
-        </form>
+          </form>
 
-        <div className="flex items-center gap-2">
           <button
             onClick={onRefresh}
-            className={"p-2 rounded-lg"}
+            className="p-2 rounded-lg hover:bg-gray-100"
             disabled={loading}
             title="Refresh weather data"
           >
             <RefreshCw
               size={16}
-              className={`text-gray-600 hover:bg-opacity-80 transition-colors  ${
+              className={`text-gray-600 transition-colors ${
                 loading ? "animate-spin" : ""
               }`}
             />
@@ -116,8 +116,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
       {/* Suggestions Panel - Absolutely positioned relative to parent */}
       {showSuggestions && !loading && getSuggestions().length > 0 && (
-        <div className="absolute left-0 right-0 z-50 px-4">
-          <ul className="max-w-[244px] ml-21 lg:ml-75 bg-white text-gray-800 rounded-b-lg shadow-lg overflow-hidden border border-gray-200">
+        <div className="absolute left-0 right-15 lg:left-73 lg:right-0 z-50 px-2 sm:px-4">
+          <ul className="w-[200px] sm:w-[240px] mx-auto sm:ml-[46px] bg-white text-gray-800 rounded-b-lg shadow-lg overflow-hidden border border-gray-200">
             {getSuggestions().map((city, index) => (
               <li
                 key={index}
@@ -138,7 +138,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       )}
 
       {locationError && (
-        <div className="text-red-600 text-center mt-2 bg-red-100 p-2 rounded-lg shadow text-sm">
+        <div className="text-red-600 text-center mt-2 mx-2 sm:mx-4 bg-red-100 p-2 rounded-lg shadow text-sm">
           {locationError}
         </div>
       )}
